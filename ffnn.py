@@ -31,14 +31,18 @@ class FFNN(nn.Module):
         return self.loss(predicted_vector, gold_label)
 
     def forward(self, input_vector):
-        # [to fill] obtain first hidden layer representation
-
-        # [to fill] obtain output layer representation
-
-        # [to fill] obtain probability dist.
-
+        # Compute hidden layer representation.
+        h = self.activation(self.W1(input_vector))
+        # Apply manual dropout if in training mode (50% dropout rate).
+        if self.training:
+            # Create a dropout mask with the same shape as h.
+            mask = (torch.rand(h.shape) > 0.5).float() * (1/0.5)
+            h = h * mask
+        # Compute the output logits.
+        z = self.W2(h)
+        # Obtain log-probabilities using the already defined softmax.
+        predicted_vector = self.softmax(z)
         return predicted_vector
-
 
 # Returns: 
 # vocab = A set of strings corresponding to the vocabulary
